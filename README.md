@@ -56,7 +56,25 @@ k6.exe v2.4.0 (commit/dd9395906d, go1.26.11, windows/amd64)
 ![30 VU](screenshots/run-30vu.png)
 ![100 VU](screenshots/run-100vu.png)
 
-Stages туршилт ([`stages.js`](stages.js), [`results/run-stages.txt`](results/run-stages.txt)): …
+### Stages туршилт
+
+Скрипт: [`stages.js`](stages.js) · Бүтэн гаралт: [`results/run-stages.txt`](results/run-stages.txt)
+
+Ачааллыг 4 шатаар өөрчилсөн: 30s-д 5 VU (халаалт) → 1m-д 30 VU (өсгөлт) → 30s-д 100 VU (оргил) → 30s-д 0 VU (буулт), нийт 2m30s.
+
+| Хэмжүүр | Утга |
+|---|---|
+| http_req_duration — avg | 189.88 ms |
+| http_req_duration — p(90) | 288.23 ms |
+| http_req_duration — p(95) | 296.94 ms |
+| http_req_duration — max | 1.58 s |
+| Throughput (http_reqs/s) | 43.53 req/s (нийт 6570) |
+| http_req_failed | 0.00% (6570-аас 0) |
+| VU | min=1, max=100 |
+
+Ажиглалт: ачаалал 100 VU хүртэл өсөж, дараа нь буухад нэг ч алдаа гараагүй (0.00%) бөгөөд p95 296.94 ms байсан. Энэ нь stages-ийн НЭГТГЭСЭН ганц summary тул 5/30/100 VU тус бүрийн утгыг салгаж харуулахгүй. Throughput 43.53 req/s нь бүх шатны дундаж бөгөөд оргил үеийн (100 VU, ~140 req/s) утгаас хамаагүй бага. Иймээс дээрх хүснэгтийн тоог тусдаа гурван ажиллуулалтаас авсан.
+
+![Stages](screenshots/stages.png)
 
 ## Алхам 4: Thresholds — SLO-г кодоор шалгах
 
@@ -81,6 +99,6 @@ Stages туршилт ([`stages.js`](stages.js), [`results/run-stages.txt`](resu
 
 ## Файлууд
 
-- Скриптүүд: `script.js`
-- k6-ийн бүтэн гаралт: [`results/`](results/) — `baseline-30s.txt`, `run-05vu.txt`, `run-30vu.txt`, `run-100vu.txt`
+- Скриптүүд: `script.js`, `stages.js`
+- k6-ийн бүтэн гаралт: [`results/`](results/) — `baseline-30s.txt`, `run-05vu.txt`, `run-30vu.txt`, `run-100vu.txt`, `run-stages.txt`
 - Дэлгэцийн зургууд: [`screenshots/`](screenshots/)
