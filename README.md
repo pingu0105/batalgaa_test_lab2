@@ -82,12 +82,21 @@ k6.exe v2.4.0 (commit/dd9395906d, go1.26.11, windows/amd64)
 
 **Үндэслэл:** Алхам 2-т хэмжсэн baseline p95 = 276.44 ms. Гадаад сүлжээний хэлбэлзэл болон 30 VU-ийн ачааллыг тооцож baseline-ийг 1.5 дахин өсгөсөн (276.44 × 1.5 ≈ 415 ms) утгыг SLO болгон сонгосон.
 
-| Тест | Threshold | Үр дүн | Файл |
-|---|---|---|---|
-| PASS | `p(95)<415`, `rate<0.01` | … | [results/thresholds-pass.txt](results/thresholds-pass.txt) |
-| FAIL (санаатай хатуу) | `p(95)<50` | … | [results/thresholds-fail.txt](results/thresholds-fail.txt) |
+Хоёр тест хоёулаа 30 VU, 1 минут ажилласан (stages ашиглаагүй).
 
-Хатуу threshold (p95 < 50 ms) тавихад тест FAIL болдог нь CI pipeline дээрх quality gate SLO зөрчигдсөн үед хувилбарыг зогсоодог зарчимтай ижил.
+| Тест | Скрипт | Threshold | Хэмжсэн утга | Үр дүн | Файл |
+|---|---|---|---|---|---|
+| SLO | [`thresholds.js`](thresholds.js) | `p(95)<415` | p(95)=287.48ms | ✓ PASS | [results/thresholds-pass.txt](results/thresholds-pass.txt) |
+| SLO | [`thresholds.js`](thresholds.js) | `rate<0.01` | rate=0.00% | ✓ PASS | [results/thresholds-pass.txt](results/thresholds-pass.txt) |
+| Санаатай хатуу | [`thresholds-fail.js`](thresholds-fail.js) | `p(95)<50` | p(95)=294.86ms | ✗ FAIL | [results/thresholds-fail.txt](results/thresholds-fail.txt) |
+| Санаатай хатуу | [`thresholds-fail.js`](thresholds-fail.js) | `rate<0.01` | rate=0.00% | ✓ PASS | [results/thresholds-fail.txt](results/thresholds-fail.txt) |
+
+Миний SLO (p95 < 415 ms, error rate < 1%) 30 VU-ийн ачааллын дор **хангагдсан**: p95 = 287.48 ms, алдаа 0.00% (2622 хүсэлтээс 0).
+
+Хатуу threshold (p95 < 50 ms) тавихад k6 `thresholds on metrics 'http_req_duration' have been crossed` гэсэн алдаа өгч, тэгээс ялгаатай exit code-оор дуусав. CI pipeline дээрх quality gate яг энэ зарчмаар SLO зөрчигдсөн үед хувилбарыг автоматаар зогсоодог.
+
+![Thresholds PASS](screenshots/thresholds-pass.png)
+![Thresholds FAIL](screenshots/thresholds-fail.png)
 
 ## Алхам 5: Локал сервер (нэмэлт)
 
@@ -99,6 +108,6 @@ k6.exe v2.4.0 (commit/dd9395906d, go1.26.11, windows/amd64)
 
 ## Файлууд
 
-- Скриптүүд: `script.js`, `stages.js`
-- k6-ийн бүтэн гаралт: [`results/`](results/) — `baseline-30s.txt`, `run-05vu.txt`, `run-30vu.txt`, `run-100vu.txt`, `run-stages.txt`
+- Скриптүүд: `script.js`, `stages.js`, `thresholds.js`, `thresholds-fail.js`
+- k6-ийн бүтэн гаралт: [`results/`](results/) — `baseline-30s.txt`, `run-05vu.txt`, `run-30vu.txt`, `run-100vu.txt`, `run-stages.txt`, `thresholds-pass.txt`, `thresholds-fail.txt`
 - Дэлгэцийн зургууд: [`screenshots/`](screenshots/)
